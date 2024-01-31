@@ -2,6 +2,7 @@
 
 Eingeschränkte Shell-Umgebung zum lernen/testen von Regulären Ausdrücken.
 
+
 ## Haupteigenschaften und Ziele des Projektes
 
 - Sandbox: Eingeschränkte Shell-Umgebung, um das Risiko (löschen von Dateien, ...) gering zu halten.
@@ -10,9 +11,19 @@ Eingeschränkte Shell-Umgebung zum lernen/testen von Regulären Ausdrücken.
     - Zielführende Leitung zu den Schlüsselkonzepten durch Aufgabenstellungen, eigene Funktionen und Code-Beispielen.
     - Geordnete Einreihung dieser, um ein möglichst einfaches Verständnis, durch aufeinander aufbauende Teilkompetenzen, zu gewährleistet wird.
 
-Das eigentliche Ziel dieses Projektes, ging über den Setup einer eingeschränkten Shell-Umgebung hinaus. Eine Lern-/Testumgebung mit ergebnisorientierten Aufgaben, (Code-)Beispielen, Quellen, ... sollte entwickelt werden, um einen bestimmten Lernerfolg bei minimalem Risiko (löschen von Dateien, ...) zu erreichen.
 
 ## Noch ein Paar Worte zum Projekt
+
+Das eigentliche Ziel dieses Projektes, ging über den Setup einer eingeschränkten Shell-Umgebung hinaus. Eine Lern-/Testumgebung mit ergebnisorientierten Aufgaben, (Code-)Beispielen, Quellen, ... sollte entwickelt werden, um einen bestimmten Lernerfolg bei minimalem Risiko (löschen von Dateien, ...) zu erreichen.
+
 Aufgrund der milden Nachfrage und meines Freizeitmangels habe ich dieses freiwillige Projekt nicht folendet.
 
+
+## Aufbau und Nutzung
+
+### Installation und Nutzung
+
 ![Download and Install](gifexplain/10-kur-indir.gif)
+
+
+### Anpassungen
