@@ -26,7 +26,7 @@ Mir ist klar, dass das Skript viele Verbesserungen nötig hat (mehrfachverwendun
 
 ### Installation und Nutzung
 
-![Download and Install](gifexplain/10-kur-indir.gif)
+![Vorführung: Übersicht und erste Einrichtung](gifexplain/bewerbung-regtry-3.gif)
 
 
 ### Anpassungen

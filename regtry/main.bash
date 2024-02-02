@@ -4,7 +4,7 @@
 #- preconf
 scname="regtry"
 desk=$(xdg-user-dir DESKTOP)
-base=$desk/${scname}-regex
+base=$desk/${scname}
 mkdir $base 2> /dev/null
 cd $base
 mt_bashrc=$base/bashrc mainbin=$base/main.bash mainconf=$base/main.conf filesbin=$base/files.bash filesconf=$base/files.conf
@@ -20,7 +20,7 @@ unalias -a
 . "${BASH_SOURCE%/*}"/main.conf
 # . $mt_regtryset
 export PS1="\[\033[00;30;43m\]$scname \[\033[00m\] "
-export PATH=$d_command:$HOME/bin/regtry-regex
+export PATH=$d_command:$HOME/bin/regtry
 
 cd $base
 
@@ -107,7 +107,7 @@ mypersist(){
     # to be able to run from commandline or from menu
 
     # dirs
-    regtrybinpersist="$HOME/.local/bin/regtry-regex/${regtrybin##*/}"
+    regtrybinpersist="$HOME/.local/bin/regtry/${regtrybin##*/}"
     local dd="${regtrybinpersist%/*}"
     local dm="${regtrydesk%/*}"
     [ ! -d "$dd" ] && mkdir -p "$dd"
@@ -118,7 +118,7 @@ mypersist(){
     if grep -q "$dd" "$shellconf" ; then
         :
     else
-        echo -e "\n# add regtry-regex path to $PATH \nexport PATH=\$PATH:$dd" >> "$shellconf"
+        echo -e "\n# add regtry path to $PATH \nexport PATH=\$PATH:$dd" >> "$shellconf"
     fi
 
     # bin
@@ -131,7 +131,7 @@ mypersist(){
     [ -e "$regtrydesk" ] && rm "$regtrydesk"
     cat -- > "$regtrydesk" <<EOF
 [Desktop Entry]
-Name=regtry-regex
+Name=regtry
 Comment=Sets up an restricted shell-environment and testfiles to experiment with regex
 Exec=xfce4-terminal --command='bash "$regtrybin"'
 Icon=utilities-terminal
@@ -187,9 +187,9 @@ cat <<-"EOF0" > main.conf
 # Desktop
 desk=$(xdg-user-dir DESKTOP)
 # basepath
-export base=$desk/regtry-regex
+export base=$desk/regtry
 # available_commands
-d_command="$base/komut"
+d_command="$base/available_commands"
 # test files
 d_tfiles="$base/tfiles"
 
@@ -199,7 +199,7 @@ shellconf=$HOME/.bashrc
 
 # bins
 regtrybin="$base/main.bash"    # changes on '--mypersist' option
-regtrydesk="$HOME/.local/share/applications/regtry-regex.desktop"
+regtrydesk="$HOME/.local/share/applications/regtry.desktop"
 
 # scriptname
 sc=$(basename "$BASH_SOURCE")
