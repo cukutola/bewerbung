@@ -55,6 +55,7 @@ shopt -q restricted_shell && dar=1 && printf '\033[1;33;40m\n%s\n\033[0m\n' 'You
 # clean up:
 trap ".dont_use_this -r $d_command ; printf '\033[1;33;40m\n%s\n\033[0m\n' 'You checked out of regtry-mode!' " 0
 EOF0
+
 #- main.bash
 cat <<-"EOF0" > main.bash
 #!/usr/bin/env bash
@@ -178,6 +179,7 @@ done
 # restricted shell
 /bin/rbash --rcfile "$base/bashrc"
 EOF0
+
 #- main.conf
 cat <<-"EOF0" > main.conf
 #!/usr/bin/env bash
@@ -218,7 +220,7 @@ more
 mkdir
 )
 EOF0
-#
+
 #- files.bash
 cat <<-"EOF0" > files.bash
 #!/usr/bin/env bash
@@ -228,7 +230,7 @@ cat <<-"EOF0" > files.bash
 
 # vars:
 dirbase="$base/tfiles"
-ctf="$base/files.conf"     # isim
+ctf="$base/files.conf"
 lmark=4
 
 # generate files/dirs from yaml-like list
@@ -277,18 +279,14 @@ gentry () {
         sub(/^[[:space:]]+/, "", $0)
         # string
         s=$1
-        # im: (im k)lasör
         if ($0~/^.*:\s*$/){
+            # dir
             imk=1; dm=0
         } else {
             imk=0; dm=0
 
             ddm=translit()
 
-            # if(length(SYMTAB[ddm])!=0){
-            #     dm=1
-            #     varname=SYMTAB[ddm]
-            # }
             if(length(ddm)!=0){
                 dm=1
                 # varname: car, namesa, ...
@@ -355,6 +353,7 @@ res64 () {
 }
 res64
 EOF0
+
 #- files.conf
 cat <<-"EOF0" > files.conf
 # Syntax:
