@@ -19,6 +19,11 @@ Das eigentliche Ziel dieses Projektes, ging über den Setup einer eingeschränkt
 Aufgrund der milden Nachfrage und meines Freizeitmangels habe ich dieses freiwillige Projekt nicht folendet.
 
 
+## Notiz:
+
+Mir ist klar, dass das Skript viele Verbesserungen nötig hat (mehrfachverwendung von Variablen, unsinnige strukturierung von Code, …). Anfangs sollte es einfach einfaches "Mittel zum Zweck" sein, wuchs aber immer mehr und wurde von mir mit „dirty-snippets“ erweitert und nicht reorganisiert. Auch wollte ich selber beim erstellen lernen (z.B. Awk). So habe ich die Verwendung von z.B. Awk stur umgesetzt und dabei viel gelernt :)
+
+
 ## Aufbau und Nutzung
 
 ### Installation und Nutzung
