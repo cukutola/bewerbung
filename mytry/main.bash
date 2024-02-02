@@ -1,30 +1,31 @@
 #!/usr/bin/env bash
 ## -- vi:ft=sh:
 
-## -- evvel
+#- preconf
+scname="regtry"
 desk=$(xdg-user-dir DESKTOP)
-base=$desk/mytry-regex
+base=$desk/${scname}-regex
 mkdir $base 2> /dev/null
 cd $base
-mt_bashrc=$base/bashrc mt_mytrybash=$base/mytry.bash mt_mytryset=$base/mytry.set mt_filesbash=$base/files.bash mt_filesset=$base/files.set
+mt_bashrc=$base/bashrc mainbin=$base/main.bash mainconf=$base/main.conf filesbin=$base/files.bash filesconf=$base/files.conf
 
-## -- bashrc
+#- bashrc
 cat <<-"EOF0" > bashrc
 #!/usr/bin/env bash
 
-# clean set:
+# clear alias:
 unalias -a
 
-# mytry set:
-. "${BASH_SOURCE%/*}"/mytry.set
-export PS1="\[\033[00;30;43m\]Pardus \[\033[00m\] "
-export PATH=$d_command:$HOME/bin/mytry-regex
+# main conf:
+. "${BASH_SOURCE%/*}"/main.conf
+# . $mt_regtryset
+export PS1="\[\033[00;30;43m\]$scname \[\033[00m\] "
+export PATH=$d_command:$HOME/bin/regtry-regex
 
-# ev:
 cd $base
 
 # command:
-lakap(){
+command_alias(){
     # TODO: Check input
     [[ -d $d_command ]] && /bin/rm -r $d_command/
     /bin/mkdir $d_command
@@ -36,7 +37,7 @@ lakap(){
             elif type -P /usr/bin/$k &> /dev/null ; then
                 /bin/ln -s /usr/bin/$k $d_command/$k
             else
-                echo "ERROR: $k path of command not found!"
+                echo "ERROR: $k command not found!"
             fi
         fi
     done
@@ -45,23 +46,23 @@ lakap(){
 
     alias grep="grep --color=always"
 }
-lakap
+command_alias
 
 # inspect:
 # restricted mode
-shopt -q restricted_shell && dar=1 && printf '\033[1;33;40m\n%s\n\033[0m\n' 'You are now in mytry-mode!'
+shopt -q restricted_shell && dar=1 && printf '\033[1;33;40m\n%s\n\033[0m\n' 'You are now in regtry-mode!'
 
 # clean up:
-trap ".dont_use_this -r $d_command ; printf '\033[1;33;40m\n%s\n\033[0m\n' 'You checked out of mytry-mode!' " 0
+trap ".dont_use_this -r $d_command ; printf '\033[1;33;40m\n%s\n\033[0m\n' 'You checked out of regtry-mode!' " 0
 EOF0
-## -- mytry.bash
-cat <<-"EOF0" > mytry.bash
+#- main.bash
+cat <<-"EOF0" > main.bash
 #!/usr/bin/env bash
 
 desk=$(xdg-user-dir DESKTOP)
-mytryset=$desk/mytry-regex/mytry.set
-# mytryset="${BASH_SOURCE%/*}/mytry.set"
-. "$mytryset"
+mainconf=./main.conf
+# mainconf="${BASH_SOURCE%/*}/main.conf"
+. "$mainconf"
 
 # helper:
 help() {
@@ -105,33 +106,33 @@ mypersist(){
     # to be able to run from commandline or from menu
 
     # dirs
-    mytrybinpersist="$HOME/.local/bin/mytry-regex/${mytrybin##*/}"
-    local dd="${mytrybinpersist%/*}"
-    local dm="${mytrydesk%/*}"
+    regtrybinpersist="$HOME/.local/bin/regtry-regex/${regtrybin##*/}"
+    local dd="${regtrybinpersist%/*}"
+    local dm="${regtrydesk%/*}"
     [ ! -d "$dd" ] && mkdir -p "$dd"
     [ ! -d "$dm" ] && mkdir -p "$dm"
 
     # path
     # if echo $PATH | grep -q "$dd" ; then
-    if grep -q "$dd" "$shellset" ; then
+    if grep -q "$dd" "$shellconf" ; then
         :
     else
-        echo -e "\n# add mytry-regex path to $PATH \nexport PATH=\$PATH:$dd" >> "$shellset"
+        echo -e "\n# add regtry-regex path to $PATH \nexport PATH=\$PATH:$dd" >> "$shellconf"
     fi
 
     # bin
     # TODO: delete on "uninstall"
-    mytrybinpersist="${mytrybinpersist%.*}"
-    [ ! -e "$mytrybinpersist" ] && ln -s "$mytrybin" "${mytrybinpersist}"    # local-dene -> base-mytry.bash
-    # chmod ug+x "$mytrybin"
+    regtrybinpersist="${regtrybinpersist%.*}"
+    [ ! -e "$regtrybinpersist" ] && ln -s "$regtrybin" "${regtrybinpersist}"    # local-dene -> base-main.bash
+    # chmod ug+x "$regtrybin"
 
     # desktop
-    [ -e "$mytrydesk" ] && rm "$mytrydesk"
-    cat -- > "$mytrydesk" <<EOF
+    [ -e "$regtrydesk" ] && rm "$regtrydesk"
+    cat -- > "$regtrydesk" <<EOF
 [Desktop Entry]
-Name=mytry-regex
+Name=regtry-regex
 Comment=Sets up an restricted shell-environment and testfiles to experiment with regex
-Exec=xfce4-terminal --command='bash "$mytrybin"'
+Exec=xfce4-terminal --command='bash "$regtrybin"'
 Icon=utilities-terminal
 Terminal=false
 Type=Application
@@ -177,33 +178,33 @@ done
 # restricted shell
 /bin/rbash --rcfile "$base/bashrc"
 EOF0
-## -- mytry.set
-cat <<-"EOF0" > mytry.set
+#- main.conf
+cat <<-"EOF0" > main.conf
 #!/usr/bin/env bash
 
 # Desktop
 desk=$(xdg-user-dir DESKTOP)
 # basepath
-export base=$desk/mytry-regex
+export base=$desk/regtry-regex
 # available_commands
 d_command="$base/komut"
 # test files
 d_tfiles="$base/tfiles"
 
 # settings
-export mytryset="$base/mytry.set"
-shellset=$HOME/.bashrc
+export mainconf="$base/main.conf"
+shellconf=$HOME/.bashrc
 
 # bins
-mytrybin="$base/mytry.bash"    # '--mypersist' opsiyonunda değişir!
-mytrydesk="$HOME/.local/share/applications/mytry-regex.desktop"
+regtrybin="$base/main.bash"    # changes on '--mypersist' option
+regtrydesk="$HOME/.local/share/applications/regtry-regex.desktop"
 
 # scriptname
 sc=$(basename "$BASH_SOURCE")
 
 # COMMAND:
 # available commands:
-# List of available commands in the mytry-shell. Change it to your needs.
+# List of available commands in the regtry-shell. Change it to your needs.
 available_commands=(
 clear
 ls
@@ -218,36 +219,41 @@ mkdir
 )
 EOF0
 #
-## -- files.bash
+#- files.bash
 cat <<-"EOF0" > files.bash
 #!/usr/bin/env bash
 
-. $mytryset
+# . $regtryset
+. ./main.conf
 
 # vars:
 dirbase="$base/tfiles"
-ctf="$base/files.set"     # isim
+ctf="$base/files.conf"     # isim
 lmark=4
 
 # generate files/dirs from yaml-like list
 gentry () {
 
+    # TODO: setting in files.conf and here. rewrite!
+    # NOTE: each name from files.conf (like car, truck, ship) has to have a setting here. otherwise, SYMTAB[] fails.
     local dm=(
-        "-vberkant=Berkant'ın dosyası"
-        "-vdeniz=Deniz'ın dosyası"
-        "-vyakup=Yakup'un dosyası"
-        "-vkarmaisimler=Aybüke\nAytuğ\nAli\nAyşe\nBerkant\nDeniz\nMuhammed\nMert\nMertcan"
-        "-vnamesa=Abid       | 4 | Erkek\nAbidin     | 6 | Erkek\nAbir       | 4 | Erkek\nAbır       | 4 | Erkek\nAbıru      | 5 | "
-        "-vnamesb=Babürşah  | 8 | Erkek\nBacı      | 4 | Kız\nBadegül   | 7 | Kız\nBade      | 4 | Kız\nBağdaç    | 6 | "
-        "-vtureng=acımak           | 6  | » ache 4 » bepainful 9 » hurt 4\nacındırmak       | 10 | "
+        "-vtruck=the truk is big and heavy."
+        "-vbus=the bus is full of people"
+        "-vbicycle=the bicycle is healthy and cheap!"
+        "-vcar=the car is blue and very fast"
+        "-vship=a ship is realy heavy on weight"
+        "-vboat=the boat is fast as you may think!"
+        "-vyacht=the yacht is comfortable and very very expensive!!"
+        "-vmixednames=alfred, daniel, hera, rosa\nbello, asya, mundo"
+        "-vnamesa=He\nMan       | 4 | Orko     | 6 | She-ra       | 4 | "
+        "-vnamesb=Papa\nSchlumf  | 8 | Schlumpfine      | 4 | schlaubischlumpf   | 7 | "
+        "-vemptyfile2="
         )
 
     mapfile -t comm < <( awk "${dm[@]}" -v dirbase=$dirbase '
-
     BEGIN{
         FS="[[:space:]:]*$"
     }
-
     # transliterate `ß` -> `ss`, ` ` -> ``, ...
     function translit(){
         r=""
@@ -258,7 +264,7 @@ gentry () {
             }
             r = r ascii[as] seps[as]
         }
-        c="echo "gensub(/\"/, "", "g", r)" | iconv -f utf-8 -t ascii//translit"; while ( c | getline r ){print r }
+        c="echo "gensub(/"/, "", "g", r)" | iconv -f utf-8 -t ascii//translit"; while ( c | getline r ){print r }
         return r
     }
 
@@ -266,11 +272,11 @@ gentry () {
         # tab
         gkh=4
         blank=(match($1, /\S/)-1)
-        g=int( (blank + (gkh-1)) / gkh )
+        i=int( (blank + (gkh-1)) / gkh )
         # del: leading blanks
         sub(/^[[:space:]]+/, "", $0)
-        # dize
-        d=$1
+        # string
+        s=$1
         # im: (im k)lasör
         if ($0~/^.*:\s*$/){
             imk=1; dm=0
@@ -279,45 +285,53 @@ gentry () {
 
             ddm=translit()
 
-            if(length(SYMTAB[ddm])!=0){
+            # if(length(SYMTAB[ddm])!=0){
+            #     dm=1
+            #     varname=SYMTAB[ddm]
+            # }
+            if(length(ddm)!=0){
                 dm=1
-                dmic=SYMTAB[ddm]
+                # varname: car, namesa, ...
+                varname=ddm
+                # varvalue: the car is ..., the ship is ...,
+                varval=SYMTAB[ddm]
             }
         }
     }
 
     {
-        # anahtar: (g)irinti
-        if (g==0){
-            hamal=dirbase"/"d
-        } else if (g==sg){
-            sub(/[^\\\/]+[\\\/]*$/, d, hamal)
-        } else if (g>sg){
-            hamal=hamal"/"d
-        } else if (g<sg){
-            ks=(sg-g)+1
-            hamal=gensub("(/[^/]+){"ks"}$", "", "g", hamal)"/"d
+        # (i)ndent, (l)ast(i)ndent
+        if (i==0){
+            hamal=dirbase"/"s
+        } else if (i==sg){
+            sub(/[^\\\/]+[\\\/]*$/, s, hamal)
+        } else if (i>sg){
+            hamal=hamal"/"s
+        } else if (i<sg){
+            ks=(sg-i)+1
+            hamal=gensub("(/[^/]+){"ks"}$", "", "g", hamal)"/"s
         }
     }
 
     {
         if (imk==0){
             if (dm==1){
-                dosic=dosic" echo \""dmic"\" > \""hamal"\";"
+                # filecontent=filecontent" echo \""varname varval"\" > \""hamal"\";"
+                filecontent=filecontent" echo \""varval"\" > \""hamal"\";"
             } else {
                 dos=dos" \""hamal"\""
             }
         } else {
-            diz=diz" \""hamal"\""
+            dir=dir" \""hamal"\""
         }
-        sg=g
+        sg=i
     }
 
     END {
         if(hata!=1){
-            system("mkdir -pv " diz)
-            system("touch " dos)
-            system(dosic)
+            system("mkdir -pv " dir)
+            #system("touch " dos)
+            system(filecontent)
         }
 
     }
@@ -326,13 +340,13 @@ gentry () {
 }
 gentry
 
-# base64 resim:
+#-- gen base64 image:
 res64 () {
     # base64 vars:
     local res__yellow_50__png='iVBORw0KGgoAAAANSUhEUgAAADIAAAAyAQMAAAAk8RryAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABlBMVEX//wD///+LefOdAAAAAWJLR0QB/wIt3gAAAAd0SU1FB+ICEQsSH/yU4XQAAAAOSURBVBjTY2AYBYMJAAABkAABxZvbSQAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxOC0wMi0xN1QwODoxODozMSswMzowMH/Go+gAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTgtMDItMTdUMDg6MTg6MzErMDM6MDAOmxtUAAAAAElFTkSuQmCC' res__turquoise3_50__png='iVBORw0KGgoAAAANSUhEUgAAADIAAAAyAQMAAAAk8RryAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABlBMVEUAxc3///8AC86tAAAAAWJLR0QB/wIt3gAAAAd0SU1FB+ICEQsSH/yU4XQAAAAOSURBVBjTY2AYBYMJAAABkAABxZvbSQAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxOC0wMi0xN1QwODoxODozMSswMzowMH/Go+gAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTgtMDItMTdUMDg6MTg6MzErMDM6MDAOmxtUAAAAAElFTkSuQmCC' res__yellow_100__png='iVBORw0KGgoAAAANSUhEUgAAAGQAAABkAQMAAABKLAcXAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABlBMVEX//wD///+LefOdAAAAAWJLR0QB/wIt3gAAAAd0SU1FB+ICEQsSH/yU4XQAAAAUSURBVDjLY2AYBaNgFIyCUUBPAAAFeAABKXG5/AAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxOC0wMi0xN1QwODoxODozMSswMzowMH/Go+gAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTgtMDItMTdUMDg6MTg6MzErMDM6MDAOmxtUAAAAAElFTkSuQmCC' res__turquoise3_100__png='iVBORw0KGgoAAAANSUhEUgAAAGQAAABkAQMAAABKLAcXAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABlBMVEUAxc3///8AC86tAAAAAWJLR0QB/wIt3gAAAAd0SU1FB+ICEQsSH/yU4XQAAAAUSURBVDjLY2AYBaNgFIyCUUBPAAAFeAABKXG5/AAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxOC0wMi0xN1QwODoxODozMSswMzowMH/Go+gAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTgtMDItMTdUMDg6MTg6MzErMDM6MDAOmxtUAAAAAElFTkSuQmCC' res__yellow_50__jpg='/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAAyADIDAREAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAn/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFgEBAQEAAAAAAAAAAAAAAAAAAAYJ/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AoKyqXAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//2Q==' res__turquoise3_50__jpg='/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAAyADIDAREAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAX/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFgEBAQEAAAAAAAAAAAAAAAAAAAcJ/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AurGz3AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAf/Z' res__yellow_100__jpg='/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCABkAGQDAREAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAn/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFgEBAQEAAAAAAAAAAAAAAAAAAAYJ/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AoKyqXAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//2Q==' res__turquoise3_100__jpg='/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCABkAGQDAREAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAX/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFgEBAQEAAAAAAAAAAAAAAAAAAAcJ/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AurGz3AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAf/Z'
 
-    # değişken ismi, değişken içeriği, resim ismi
-    local dis=""  dic="" ris="" rout="$dirbase/resim"
+    # varname, varcontent, imagename
+    local dis=""  dic="" ris="" rout="$dirbase/images"
     [ ! -d "$rout" ] && mkdir $rout
     for v in ${!res__*} ; do
         dic="${!v}" ; dis=(${v//__/ }) ; ris="${dis[1]}.${dis[2]}" ;
@@ -341,8 +355,8 @@ res64 () {
 }
 res64
 EOF0
-## -- files.set
-cat <<-"EOF0" > files.set
+#- files.conf
+cat <<-"EOF0" > files.conf
 # Syntax:
 # indent-count == file-level:
 #        ➊   ➋   ➌
@@ -350,26 +364,29 @@ cat <<-"EOF0" > files.set
 # accepted chars:
 #       all chars
 
-persons (by year):
-    2018:
-        berkant
-        deniz
-        yakup
-    2017:
-        berkant
-        deniz
-        yakup
+vehicles:
+    road:
+        truck
+        car
+        bus
+        bicycle
+    sea:
+        boat
+        ship
+        yacht
 
-türkçe ingilizce:
-    tur-eng.txt
+# ger-eng-dict:
+#     tfiles-source/german-english-dict.txt
+#     tfiles-source/book-PeeksAndPokesForTheCommodore64.pdf
+#     tfiles-source/book-PeeksAndPokesForTheCommodore64_djvu.txt
 
 names:
-    mixed names.txt
-    names a.txt
-    names b.txt
-    empty file 2.txt
+    mixed_names
+    names_a
+    names_b
+    empty_file_2
 EOF0
-## -- ahir
-chmod ug+x $mt_bashrc $mt_mytrybash $mt_mytryset $mt_filesbash $mt_filesset
-./mytry.bash
+#- run
+chmod ug+x $mt_bashrc $mainbin $mainconf $filesbin $filesconf
+./main.bash
 # clear
