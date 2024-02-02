@@ -24,7 +24,7 @@ Mir ist klar, dass das Skript viele Verbesserungen nötig hat (mehrfachverwendun
 
 ## Aufbau und Nutzung
 
-### Vorführung: Übersicht und erste Einrichtung
+### Übersicht und erste Einrichtung
 
 ![Vorführung: Übersicht und erste Einrichtung](gifexplain/bewerbung-regtry-3.gif)
 
