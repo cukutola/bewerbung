@@ -16,8 +16,6 @@ Eingeschränkte Shell-Umgebung zum lernen/testen von Regulären Ausdrücken.
 
 Das eigentliche Ziel dieses Projektes, ging über den Setup einer eingeschränkten Shell-Umgebung hinaus. Eine Lern-/Testumgebung mit ergebnisorientierten Aufgaben, (Code-)Beispielen, Quellen, ... sollte entwickelt werden, um einen bestimmten Lernerfolg bei minimalem Risiko (löschen von Dateien, ...) zu erreichen.
 
-Aufgrund der milden Nachfrage und meines Freizeitmangels habe ich dieses freiwillige Projekt nicht folendet.
-
 
 ## Notiz
 
